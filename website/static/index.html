@@ -2,6 +2,9 @@
 	<head>
 		<title>Justin Achong</title>
 		<style>
+			body {
+				color: #333333;
+			}
 			main {
 				text-align: center;
 				font-family: sans-serif;
@@ -10,10 +13,13 @@
 				margin-right: auto;
 			}
 			h1 {
-				font-weight: normal;
+				font-size: 40px;
+				padding-left: 0;
+				margin-bottom: 0;
+				text-align: left;
 			}
-			h2 {
-				font-weight: normal;
+			hr {
+				margin: 20px 0;
 			}
 			#profile-pic {
 				border-radius: 50%;
@@ -21,51 +27,86 @@
 			#summary {
 				text-align: justify;
 			}
-			#bar li {
+			#header {
+				display: grid;
+				grid-template-columns: repeat(10, 1fr);
+				grid-column-gap: 20px;
+			}
+			#profile-pic-container {
+				text-align: right;
+				grid-column: span 5;
+			}
+			#nav-bar-container {
+				text-align: left;
+			}
+			#nav-bar {
+				padding-left: 0;
+			}
+			#header-content {
+				padding-top: 50px;
+				grid-column: span 5;
+			}
+			#nav-bar li {
 				display: inline;
 				list-style-type: none;
+				padding-right: 4px;
+				font-size: 20px;
 			}
-			#bar a {
+			#nav-bar a {
 				text-decoration: none;
 			}
 		</style>
 	<head>
 	<body>
 		<main>
-			<div>
-				<img
-					id="profile-pic"
-					src="/profile.jpg"
-					height="240"
-					width="240"
-				/>
+			<div id="header">
+				<div id="profile-pic-container">
+					<img
+						id="profile-pic"
+						src="/profile.jpg"
+						height="240"
+						width="240"
+					/>
+				</div>
+				<div id="header-content">
+					<h1>Justin Achong</h1>
+					<div id="nav-bar-container">
+						<ul id="nav-bar">
+							<li>
+								<a
+									href="/"
+								>
+									Home
+								</a>
+							</li>
+							<li>
+								<a
+									href="/about"
+								>
+									About
+								</a>
+							</li>
+							<li>
+								<a
+									target="_blank"
+									href="/cv-justin-achong.pdf"
+								>
+									Resume
+								</a>
+							</li>
+							<li>
+								<a
+									target="_blank"
+									href="https://www.linkedin.com/in/justin-achong"
+								>
+									LinkedIn
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
 			</div>
-			<div>
-				<h1>Justin Achong</h1>
-			</div>
-			<div>
-				<h2>Software Developer - Husband - Father</h2>
-			</div>
-			<div>
-				<ul id="bar">
-					<li>
-						<a
-							target="_blank"
-							href="/cv-justin-achong.pdf"
-						>
-							Resume
-						</a>
-					</li>
-					<li>
-						<a
-							target="_blank"
-							href="https://www.linkedin.com/in/justin-achong"
-						>
-							LinkedIn
-						</a>
-					</li>
-				</ul>
-			</div>
+			<hr/>
 			<section id="summary">
 				<p>
 I am a software developer building web applications in JavaScript, C++, and PHP.
