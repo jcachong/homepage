@@ -32,11 +32,11 @@
 				grid-template-columns: repeat(10, 1fr);
 				grid-column-gap: 20px;
 			}
-			#profile-pic-container {
+			#profile-pic-wrapper {
 				text-align: right;
 				grid-column: span 5;
 			}
-			#nav-bar-container {
+			#nav-bar-wrapper {
 				text-align: left;
 			}
 			#nav-bar {
@@ -60,12 +60,36 @@
 			#nav-bar span:hover {
 				text-decoration: underline;
 			}
+			#contact-secret {
+				text-align: left;
+			}
 		</style>
+		<script>
+			window.onload = (e) => {
+				document.querySelector("#contact").addEventListener("click", (e) => {
+					const spans = document.querySelector("#contact-secret").querySelectorAll("span");
+					if(!spans[0].textContent) {
+						const name = document.querySelector("h1").textContent;
+						const names = name.split(' ');
+						const username = (names[0][0] + names[1][1] + names[1]).toLowerCase();
+						spans[4].textContent = 'com';
+						spans[3].textContent = 'dot';
+						spans[2].textContent = 'gmail';
+						spans[1].textContent = 'at';
+						spans[0].textContent = username;
+					} else {
+						spans.forEach((span) => {
+							span.textContent = '';
+						});
+					}
+				});
+			};
+		</script>
 	<head>
 	<body>
 		<main>
 			<div id="header">
-				<div id="profile-pic-container">
+				<div id="profile-pic-wrapper">
 					<img
 						id="profile-pic"
 						src="/profile.jpg"
@@ -75,7 +99,7 @@
 				</div>
 				<div id="header-content">
 					<h1>Justin Achong</h1>
-					<div id="nav-bar-container">
+					<div id="nav-bar-wrapper">
 						<ul id="nav-bar">
 							<li>
 								<a
@@ -101,13 +125,20 @@
 							</li>
 							<li>
 								<a
-									target="_blank"
-									href="https://www.linkedin.com/in/justin-achong"
+									id="contact"
+									href="javascript:void(0);"
 								>
-									<span>LinkedIn</span>
+									<span>Contact</span>
 								</a>
 							</li>
 						</ul>
+					</div>
+					<div id="contact-secret">
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
+						<span></span>
 					</div>
 				</div>
 			</div>
