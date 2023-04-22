@@ -1,90 +1,8 @@
 <html>
 	<head>
 		<title>Justin Achong</title>
-		<style>
-			body {
-				color: #333333;
-			}
-			main {
-				text-align: center;
-				font-family: sans-serif;
-				max-width: 800px;
-				margin-left: auto;
-				margin-right: auto;
-			}
-			h1 {
-				font-size: 40px;
-				padding-left: 0;
-				margin-bottom: 0;
-				text-align: left;
-			}
-			hr {
-				margin: 20px 0;
-			}
-			#profile-pic {
-				border-radius: 50%;
-			}
-			#summary {
-				text-align: left;
-			}
-			#header {
-				display: grid;
-				grid-template-columns: repeat(2, 1fr);
-				grid-column-gap: 20px;
-			}
-			#profile-pic-wrapper {
-				text-align: right;
-				grid-column: span 1;
-			}
-			#nav-bar-wrapper {
-				text-align: left;
-			}
-			#nav-bar {
-				padding-left: 0;
-				margin-top: 8px;
-			}
-			#header-content {
-				padding-top: 54px;
-				grid-column: span 1;
-			}
-			#nav-bar li {
-				display: inline;
-				list-style-type: none;
-				margin-right: 4px;
-				font-size: 20px;
-			}
-			#nav-bar a {
-				color: #333333;
-				text-decoration: none;
-			}
-			#nav-bar span:hover {
-				text-decoration: underline;
-			}
-			#contact-secret {
-				text-align: left;
-			}
-		</style>
-		<script>
-			window.onload = (e) => {
-				document.querySelector("#contact").addEventListener("click", (e) => {
-					const spans = document.querySelector("#contact-secret").querySelectorAll("span");
-					if(!spans[0].textContent) {
-						const name = document.querySelector("h1").textContent;
-						const names = name.split(' ');
-						const username = (names[0][0] + names[1][1] + names[1]).toLowerCase();
-						spans[4].textContent = 'com';
-						spans[3].textContent = 'dot';
-						spans[2].textContent = 'gmail';
-						spans[1].textContent = 'at';
-						spans[0].textContent = username;
-					} else {
-						spans.forEach((span) => {
-							span.textContent = '';
-						});
-					}
-				});
-			};
-		</script>
+		<link rel="stylesheet" href="/main.css"></style>
+		<script type="module" src="/main.js"></script>
 	<head>
 	<body>
 		<main>
@@ -143,24 +61,7 @@
 				</div>
 			</div>
 			<hr/>
-			<section id="summary">
-				<p>
-Hello, and welcome to my website!
-My name is Justin, and I am a software developer building web applications in JavaScript, C++, and PHP.
-				</p>
-				<p>
-Growing up in the suburbs of Vancouver, I left my hometown for Montreal to study Mathematics and Computer Science at McGill University.
-Though I now spend my days immersed in the hard practicalities of software engineering, my time at McGill studying pure mathematics gave me an appreciation for and training in the rigorous standards of proof, logical argumentation, and abstract analysis of the subject, which still find good use daily in my problem solving process.
-				</p>
-				<p>
-After graduating from McGill, I returned to Vancouver, this time to the big city as a software developer.
-Working for a year afforded me the chance to marry the love of my life and start my family.
-After a couple years in a developer role, I transitioned to team lead and, most recently, team manager positions.
-				</p>
-				<p>
-I enjoy the challenges and opportunities that come with the ever-changing landscape of software, and exploring how the latest technologies can be combined with proven methodologies to build powerful and effective systems.
-				</p>
-			</section>
+			<section id="summary">{{{content}}}</section>
 		</main>
 	</body>
 </html>

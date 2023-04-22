@@ -1,0 +1,62 @@
+body {
+	color: #333333;
+}
+main {
+	text-align: center;
+	font-family: sans-serif;
+	max-width: 800px;
+	margin-left: auto;
+	margin-right: auto;
+}
+h1 {
+	font-size: 40px;
+	padding-left: 0;
+	margin-bottom: 0;
+	text-align: left;
+}
+hr {
+	margin: 20px 0;
+}
+#profile-pic {
+	border-radius: 50%;
+}
+#summary {
+	text-align: left;
+}
+#header {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	grid-column-gap: 20px;
+}
+#profile-pic-wrapper {
+	text-align: right;
+	grid-column: span 1;
+}
+#nav-bar-wrapper {
+	text-align: left;
+}
+#nav-bar {
+	padding-left: 0;
+	margin-top: 8px;
+}
+#header-content {
+	padding-top: 54px;
+	grid-column: span 1;
+}
+#nav-bar li {
+	display: inline;
+	list-style-type: none;
+	margin-right: 4px;
+	font-size: 20px;
+}
+#nav-bar a {
+	color: #333333;
+	text-decoration: none;
+}
+#nav-bar span:hover {
+	text-decoration: underline;
+}
+#contact-secret {
+	text-align: left;
+}
+
