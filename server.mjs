@@ -47,11 +47,10 @@ const handlePageRequest = async (req, res) => {
 	let url = req.url;
 	if(url.match(/[a-zA-Z]$/g)) {
 		url += '.html'
+	} else if(url === '/') {
+		url = 'home.html'
 	}
 	const paths = [PAGES_PATH, url];
-	if(url.endsWith('/')) {
-		paths.push('index.html');
-	}
 	const filePath = path.join(...paths);
 	const pathTraversal = !filePath.startsWith(PAGES_PATH);
 	const exists = await fs.promises.access(filePath).then(...toBool);
