@@ -64,6 +64,15 @@ a span:hover {
 	text-align: left;
 }
 
+#footer {
+	text-align: left;
+	font-size: 12px;
+}
+
+a {
+	color: #A8A8A8;
+}
+
 @media (max-width: 800px) {
 	#nav-bar-wrapper {
 		text-align: center;

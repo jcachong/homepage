@@ -2,6 +2,7 @@ window.onload = (e) => {
 	const PAGES = [
 		'home',
 		'about',
+		'site',
 	];
 	document.querySelector("#contact").addEventListener("click", (e) => {
 		// Display contact information.
