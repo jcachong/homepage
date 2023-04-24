@@ -1,5 +1,11 @@
 window.onload = (e) => {
+	const PAGES = [
+		'home',
+		'about',
+	];
 	document.querySelector("#contact").addEventListener("click", (e) => {
+		// Display contact information.
+		// Try to hide it from bots.
 		const spans = document.querySelector("#contact-secret").querySelectorAll("span");
 		if(!spans[0].textContent) {
 			const name = document.querySelector("h1").textContent;
@@ -15,6 +21,19 @@ window.onload = (e) => {
 				span.textContent = '';
 			});
 		}
+	});
+
+	document.querySelectorAll(".page-link").forEach((link) => {
+		link.addEventListener("click", async function(e) {
+			if(!PAGES.includes(this.id)) {
+				// Unknown page.
+				return;
+			}
+			const page = this.id;
+			const response = await fetch(`/pages/${page}.html`);
+			const html = await response.text();
+			document.querySelector("#content").innerHTML = html;
+		});
 	});
 };
 

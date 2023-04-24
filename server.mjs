@@ -18,7 +18,7 @@ const MIME_TYPES = {
 };
 
 const STATIC_PATH = path.join(process.cwd(), './static');
-const PAGES_PATH = path.join(process.cwd(), './pages');
+const PAGES_PATH = path.join(process.cwd(), './static/pages');
 
 const toBool = [() => true, () => false];
 
