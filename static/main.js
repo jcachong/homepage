@@ -32,7 +32,13 @@ window.onload = (e) => {
 			const page = this.id;
 			const response = await fetch(`/pages/${page}.html`);
 			const html = await response.text();
+
+			// Update page content.
 			document.querySelector("#content").innerHTML = html;
+
+			// Update URL.
+			const url = page === 'home' ? '/' : `/${page}`;
+			window.history.replaceState(null, '', url)
 		});
 	});
 };
