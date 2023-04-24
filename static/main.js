@@ -29,7 +29,14 @@ window.onload = (e) => {
 				// Unknown page.
 				return;
 			}
+
 			const page = this.id;
+			const path = page === 'home' ? '/' : `/${page}`;
+			if(path === window.location.pathname) {
+				// Already on this page.
+				return;
+			}
+
 			const response = await fetch(`/pages/${page}.html`);
 			const html = await response.text();
 
@@ -37,8 +44,7 @@ window.onload = (e) => {
 			document.querySelector("#content").innerHTML = html;
 
 			// Update URL.
-			const url = page === 'home' ? '/' : `/${page}`;
-			window.history.replaceState(null, '', url)
+			window.history.replaceState(null, '', path)
 		});
 	});
 };
