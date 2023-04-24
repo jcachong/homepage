@@ -1,5 +1,6 @@
 body {
-	color: #333333;
+	background-color: #101010;
+	color: #F0F0F0;
 }
 main {
 	text-align: center;
@@ -52,11 +53,11 @@ hr {
 	margin-right: 4px;
 	font-size: 20px;
 }
-#nav-bar a {
-	color: #333333;
+a {
+	color: #F0F0F0;
 	text-decoration: none;
 }
-#nav-bar span:hover {
+a span:hover {
 	text-decoration: underline;
 }
 #contact-secret {
