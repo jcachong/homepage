@@ -64,3 +64,20 @@ a span:hover {
 	text-align: left;
 }
 
+@media (max-width: 800px) {
+	#nav-bar-wrapper {
+		text-align: center;
+	}
+	#header-content {
+		padding-top: 0;
+		grid-column: span 2;
+	}
+	#profile-pic-wrapper {
+		text-align: center;
+		grid-column: span 2;
+	}
+	h1 {
+		margin-top: 8px;
+		text-align: center;
+	}
+}
