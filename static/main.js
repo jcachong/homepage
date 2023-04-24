@@ -25,6 +25,7 @@ window.onload = (e) => {
 
 	document.querySelectorAll(".page-link").forEach((link) => {
 		link.addEventListener("click", async function(e) {
+			e.preventDefault();
 			if(!PAGES.includes(this.id)) {
 				// Unknown page.
 				return;
