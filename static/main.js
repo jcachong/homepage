@@ -24,6 +24,7 @@ window.onload = (e) => {
 		}
 	});
 
+	// Click a link to go to another page.
 	document.querySelectorAll(".page-link").forEach((link) => {
 		link.addEventListener("click", async function(e) {
 			e.preventDefault();
@@ -50,6 +51,7 @@ window.onload = (e) => {
 		});
 	});
 
+	// Toggle between Dark and Light modes.
 	document.querySelector("#toggle-theme").addEventListener("click", (e) => {
 		document.querySelector("body").classList.toggle("dark-mode");
 	});
