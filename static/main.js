@@ -49,5 +49,9 @@ window.onload = (e) => {
 			window.history.replaceState(null, '', path)
 		});
 	});
+
+	document.querySelector("#toggle-theme").addEventListener("click", (e) => {
+		document.querySelector("body").classList.toggle("dark-mode");
+	});
 };
 
