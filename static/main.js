@@ -17,11 +17,10 @@ window.onload = (e) => {
 			spans[2].textContent = 'gmail';
 			spans[1].textContent = 'at';
 			spans[0].textContent = username;
-		} else {
-			spans.forEach((span) => {
-				span.textContent = '';
-			});
 		}
+		spans.forEach((span) => {
+			span.classList.toggle('fade');
+		});
 	});
 
 	// Click a link to go to another page.

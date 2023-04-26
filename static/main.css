@@ -96,6 +96,15 @@ a {
 	display: none;
 }
 
+span {
+  opacity: 1;
+  transition: opacity 1s;
+}
+
+.fade {
+  opacity: 0;
+}
+
 @media (max-width: 800px) {
 	body {
 		margin: 8px 8px;
