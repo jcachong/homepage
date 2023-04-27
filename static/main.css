@@ -41,6 +41,8 @@ footer hr {
 }
 #content {
 	text-align: left;
+	/* 200 ms transition matches value in JavaScript */
+	transition: opacity 200ms;
 }
 #header {
 	display: grid;
@@ -98,7 +100,7 @@ a {
 
 span {
   opacity: 1;
-  transition: opacity 1s;
+  transition: opacity 400ms;
 }
 
 .fade {

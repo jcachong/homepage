@@ -39,14 +39,23 @@ window.onload = (e) => {
 				return;
 			}
 
+			const contentElem = document.querySelector("#content");
+			contentElem.style.opacity = '0';
+			const startTime = new Date();
 			const response = await fetch(`/pages/${page}.html`);
 			const html = await response.text();
+			const endTime = new Date();
+			const timeElapsed = endTime - startTime;
+			// Magic number 200ms matches #content opacity transition in CSS.
+			const waitMs = Math.max(0, 200 - timeElapsed);
+			setTimeout(() => {
+				// Update page content.
+				contentElem.innerHTML = html;
+				contentElem.style.opacity = '100';
 
-			// Update page content.
-			document.querySelector("#content").innerHTML = html;
-
-			// Update URL.
-			window.history.replaceState(null, '', path)
+				// Update URL.
+				window.history.replaceState(null, '', path)
+			}, waitMs);
 		});
 	});
 
