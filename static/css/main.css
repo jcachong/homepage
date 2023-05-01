@@ -1,6 +1,6 @@
 body {
 	color: #202020;
-	font-family: sans-serif;
+	font-family: 'prata-regular', serif;
 	margin: 8px auto;
 	max-width: 800px;
 	min-height: calc(100vh - 16px);
@@ -129,4 +129,11 @@ span {
 	#contact-secret {
 		text-align: center;
 	}
+}
+
+@font-face {
+	font-family: 'prata-regular';
+	src: url('../fonts/Prata-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
 }
