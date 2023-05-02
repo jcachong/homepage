@@ -1,6 +1,6 @@
 body {
 	color: #202020;
-	font-family: 'Roboto-Regular', serif;
+	font-family: 'LibreBaskerville-Regular', serif;
 	margin: 8px auto;
 	max-width: 800px;
 	min-height: calc(100vh - 16px);
@@ -135,15 +135,16 @@ span {
 }
 
 @font-face {
-	font-family: 'Prata-Regular';
-	src: url('../fonts/Prata-Regular.ttf') format('truetype');
+	font-family: 'LibreBaskerville-Regular';
+	src: url('../fonts/LibreBaskerville-Regular.otf') format('opentype');
 	font-weight: normal;
 	font-style: normal;
 }
 
+
 @font-face {
-	font-family: 'Roboto-Regular';
-	src: url('../fonts/Roboto-Regular.ttf') format('truetype');
+	font-family: 'Prata-Regular';
+	src: url('../fonts/Prata-Regular.ttf') format('truetype');
 	font-weight: normal;
 	font-style: normal;
 }
