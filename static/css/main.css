@@ -45,6 +45,7 @@ footer hr {
 	text-align: left;
 	/* 200 ms transition matches value in JavaScript */
 	transition: opacity 200ms;
+	line-height: 1.5rem;
 }
 #header {
 	display: grid;
