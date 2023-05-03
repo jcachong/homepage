@@ -23,41 +23,68 @@ window.onload = (e) => {
 		});
 	});
 
-	// Click a link to go to another page.
-	document.querySelectorAll(".page-link").forEach((link) => {
-		link.addEventListener("click", async function(e) {
-			e.preventDefault();
-			if(!PAGES.includes(this.id)) {
-				// Unknown page.
-				return;
-			}
+	let localListeners = [];
+	const refreshLocalListeners = () => {
+		const contentElem = document.querySelector("#content");
 
-			const page = this.id;
-			const path = page === 'home' ? '/' : `/${page}`;
-			if(path === window.location.pathname) {
-				// Already on this page.
-				return;
-			}
-
-			const contentElem = document.querySelector("#content");
-			contentElem.style.opacity = '0';
-			const startTime = new Date();
-			const response = await fetch(`/pages/${page}.html`);
-			const html = await response.text();
-			const endTime = new Date();
-			const timeElapsed = endTime - startTime;
-			// Magic number 200ms matches #content opacity transition in CSS.
-			const waitMs = Math.max(0, 200 - timeElapsed);
-			setTimeout(() => {
-				// Update page content.
-				contentElem.innerHTML = html;
-				contentElem.style.opacity = '100';
-
-				// Update URL.
-				window.history.replaceState(null, '', path)
-			}, waitMs);
+		// Remove local listeners from elements.
+		localListeners.forEach((elem) => {
+			elem.removeEventListener("click", handlePageLinkClick);
 		});
-	});
+		localListeners = [];
+
+		// Add listeners to new link elements.
+		contentElem.querySelectorAll(".page-link").forEach((link) => {
+			addPageLinkListener(link);
+			localListeners.push(link);
+		});
+	};
+
+	const handlePageLinkClick = async function(e) {
+		e.preventDefault();
+		if(!PAGES.includes(this.id)) {
+			// Unknown page.
+			return;
+		}
+
+		const page = this.id;
+		const path = page === 'home' ? '/' : `/${page}`;
+		if(path === window.location.pathname) {
+			// Already on this page.
+			return;
+		}
+
+		const contentElem = document.querySelector("#content");
+		contentElem.style.opacity = '0';
+		const startTime = new Date();
+		const response = await fetch(`/pages/${page}.html`);
+		const html = await response.text();
+		const endTime = new Date();
+		const timeElapsed = endTime - startTime;
+		// Magic number 200ms matches #content opacity transition in CSS.
+		const waitMs = Math.max(0, 200 - timeElapsed);
+		setTimeout(() => {
+			// Update page content.
+			contentElem.innerHTML = html;
+			contentElem.style.opacity = '100';
+
+			// Update URL.
+			window.history.replaceState(null, '', path)
+
+			refreshLocalListeners();
+		}, waitMs);
+	};
+
+	const addPageLinkListener = (link) => {
+		link.addEventListener("click", handlePageLinkClick);
+	};
+
+	// Click a link to go to another page.
+	const navBar = document.querySelector("#nav-bar");
+	const pageLinks = navBar.querySelectorAll(".page-link");
+	pageLinks.forEach(addPageLinkListener);
+
+	refreshLocalListeners();
 
 	// Toggle between Dark and Light modes.
 	document.querySelector("#toggle-theme").addEventListener("click", (e) => {
