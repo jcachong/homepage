@@ -80,9 +80,14 @@ window.onload = (e) => {
 	};
 
 	// Click a link to go to another page.
-	const navBar = document.querySelector("#nav-bar");
-	const pageLinks = navBar.querySelectorAll(".page-link");
-	pageLinks.forEach(addPageLinkListener);
+	const addPageLinkListeners = (parentSelector) => {
+		const parentElem = document.querySelector(parentSelector);
+		const pageLinks = parentElem.querySelectorAll(".page-link");
+		pageLinks.forEach(addPageLinkListener);
+	};
+
+	addPageLinkListeners("footer");
+	addPageLinkListeners("#nav-bar");
 
 	refreshLocalListeners();
 
