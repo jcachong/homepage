@@ -42,12 +42,12 @@ window.onload = (e) => {
 
 	const handlePageLinkClick = async function(e) {
 		e.preventDefault();
-		if(!PAGES.includes(this.id)) {
+		const page = this.getAttribute('data-page');
+		if(!PAGES.includes(page)) {
 			// Unknown page.
 			return;
 		}
 
-		const page = this.id;
 		const path = page === 'home' ? '/' : `/${page}`;
 		if(path === window.location.pathname) {
 			// Already on this page.
