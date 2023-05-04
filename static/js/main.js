@@ -96,5 +96,19 @@ window.onload = (e) => {
 	document.querySelector("#toggle-theme").addEventListener("click", (e) => {
 		document.querySelector("body").classList.toggle("dark-mode");
 	});
+
+	window.addEventListener("keydown", (event) => {
+		const scrollBy = 40;
+		switch(event.keyCode) {
+			case 75: // k
+				window.scrollBy(0, -scrollBy);
+				break;
+			case 74: // j
+				window.scrollBy(0, scrollBy);
+				break;
+			default:
+				break;
+		}
+	});
 };
 
