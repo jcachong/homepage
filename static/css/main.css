@@ -32,9 +32,6 @@ h2 {
 	font-family: 'Prata-Regular';
 	text-align: center;
 }
-main hr {
-	margin: 20px 0;
-}
 footer hr {
 	margin-bottom: 10px;
 }
@@ -51,6 +48,9 @@ footer hr {
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
 	grid-column-gap: 20px;
+}
+header hr {
+	margin: 20px 0;
 }
 #profile-pic-wrapper {
 	text-align: right;
