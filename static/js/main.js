@@ -42,7 +42,8 @@ window.onload = (e) => {
 
 	const handlePageLinkClick = async function(e) {
 		e.preventDefault();
-		const page = this.getAttribute('data-page');
+		const href = this.href.split('/').pop();
+		const page = href === '' ? 'home' : href;
 		if(!PAGES.includes(page)) {
 			// Unknown page.
 			return;
