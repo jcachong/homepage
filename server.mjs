@@ -31,8 +31,8 @@ const render = (template, params) => {
 	return view;
 };
 
-const getFilePath = async (url) => {
-	const paths = [STATIC_PATH, url];
+const getFilePath = async (url, prefix = STATIC_PATH) => {
+	const paths = [prefix, url];
 	if (url.endsWith('/')) paths.push('index.html');
 	const filePath = path.join(...paths);
 	const pathTraversal = !filePath.startsWith(STATIC_PATH);
@@ -63,12 +63,15 @@ const handlePageRequest = async (req, res) => {
 	} else if(url === '/') {
 		url = 'home.html'
 	}
-	const paths = [PAGES_PATH, url];
-	const filePath = path.join(...paths);
-	const pathTraversal = !filePath.startsWith(PAGES_PATH);
-	const exists = await fs.promises.access(filePath).then(...toBool);
-	const found = !pathTraversal && exists;
-	if(!found) {
+	let filePath = await getFilePath(url, PAGES_PATH);
+	let isMarkdown = false;
+	if(filePath === null && url.match(/\.html$/)) {
+		url = url.replace(/\.html$/, '.md');
+		filePath = await getFilePath(url, PAGES_PATH);
+		isMarkdown = true;
+	}
+
+	if(filePath === null) {
 		return false;
 	}
 
@@ -76,7 +79,7 @@ const handlePageRequest = async (req, res) => {
 		'static/index.html').toString();
 	const page = fs.readFileSync(filePath).toString();
 	const view = render(indexTmpl, {
-		page: page,
+		page: isMarkdown ? marked(page) : page,
 	});
 
 	if(view) {
