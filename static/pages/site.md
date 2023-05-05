@@ -7,3 +7,6 @@ The font used for the headers is
 and
 <a href="https://fonts.google.com/specimen/Libre+Baskerville" target="_blank">Libre Baskerville</a>
 is used for the body.
+
+The site content is written up in Markdown and rendered using
+<a href="https://marked.js.org/" target="blank">Marked</a>.
