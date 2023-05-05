@@ -23,112 +23,120 @@ const PAGES_PATH = path.join(process.cwd(), './static/pages');
 
 const toBool = [() => true, () => false];
 
-const render = (template, params) => {
-	let view = template;
-	for(const key in params) {
-		view = view.replaceAll(`{{{${key}}}}`, params[key]);
+export default class Server {
+
+	construct() {
 	}
-	return view;
-};
 
-const getFilePath = async (url, prefix = STATIC_PATH) => {
-	const paths = [prefix, url];
-	if (url.endsWith('/')) paths.push('index.html');
-	const filePath = path.join(...paths);
-	const pathTraversal = !filePath.startsWith(STATIC_PATH);
-	const exists = await fs.promises.access(filePath).then(...toBool);
-	const found = !pathTraversal && exists;
-	return found ? filePath : null;
-};
+	run() {
+		http.createServer(async (req, res) => {
+			const isPageRequest = await this.handlePageRequest(req, res);
+			if(isPageRequest) {
+				return;
+			}
+			const isMarkdownPageRequest = await this.handleMarkdownPageRequest(req, res);
+			if(isMarkdownPageRequest) {
+				return;
+			}
+			const file = await this.prepareFile(req.url);
+			const statusCode = file.found ? 200 : 404;
+			const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
+			res.writeHead(statusCode, { 'Content-Type': mimeType });
+			file.stream.pipe(res);
+			console.log(`${req.method} ${req.url} ${statusCode}`);
+		}).listen(PORT);
+		console.log(`Server running at http://127.0.0.1:${PORT}/`);
+	}
 
-const prepareFile = async (url) => {
-	let filePath = await getFilePath(url);
-	if(filePath === null) {
-		const match = url.match(/([A-Za-z]+).html/);
-		if(match) {
-			marked
+	render(template, params) {
+		let view = template;
+		for(const key in params) {
+			view = view.replaceAll(`{{{${key}}}}`, params[key]);
+		}
+		return view;
+	}
+
+	async getFilePath(url, prefix = STATIC_PATH) {
+		const paths = [prefix, url];
+		if (url.endsWith('/')) paths.push('index.html');
+		const filePath = path.join(...paths);
+		const pathTraversal = !filePath.startsWith(STATIC_PATH);
+		const exists = await fs.promises.access(filePath).then(...toBool);
+		const found = !pathTraversal && exists;
+		return found ? filePath : null;
+	}
+
+	async prepareFile(url) {
+		let filePath = await this.getFilePath(url);
+		if(filePath === null) {
+			const match = url.match(/([A-Za-z]+).html/);
+			if(match) {
+				marked
+			}
+		}
+		const found = filePath !== null;
+		const streamPath = found ? filePath : STATIC_PATH + '/404.html';
+		const ext = path.extname(streamPath).substring(1).toLowerCase();
+		const stream = fs.createReadStream(streamPath);
+		return { found, ext, stream };
+	}
+
+	async handlePageRequest(req, res) {
+		let url = req.url;
+		if(url.match(/[a-zA-Z]$/g)) {
+			url += '.html'
+		} else if(url === '/') {
+			url = 'home.html'
+		}
+		let filePath = await this.getFilePath(url, PAGES_PATH);
+		let isMarkdown = false;
+		if(filePath === null && url.match(/\.html$/)) {
+			url = url.replace(/\.html$/, '.md');
+			filePath = await this.getFilePath(url, PAGES_PATH);
+			isMarkdown = true;
+		}
+
+		if(filePath === null) {
+			return false;
+		}
+
+		const indexTmpl = fs.readFileSync(
+			'static/index.html').toString();
+		const page = fs.readFileSync(filePath).toString();
+		const view = this.render(indexTmpl, {
+			page: isMarkdown ? marked(page) : page,
+		});
+
+		if(view) {
+			res.writeHead(200, {
+				'Content-Type': 'text/html; charset=UTF-8'
+			});
+			res.end(view);
+			return true;
+		} else {
+			return false;
 		}
 	}
-	const found = filePath !== null;
-	const streamPath = found ? filePath : STATIC_PATH + '/404.html';
-	const ext = path.extname(streamPath).substring(1).toLowerCase();
-	const stream = fs.createReadStream(streamPath);
-	return { found, ext, stream };
-};
 
-const handlePageRequest = async (req, res) => {
-	let url = req.url;
-	if(url.match(/[a-zA-Z]$/g)) {
-		url += '.html'
-	} else if(url === '/') {
-		url = 'home.html'
-	}
-	let filePath = await getFilePath(url, PAGES_PATH);
-	let isMarkdown = false;
-	if(filePath === null && url.match(/\.html$/)) {
+	async handleMarkdownPageRequest(req, res) {
+		let url = req.url;
+		if(!url.match(/\.html$/)) {
+			return false;
+		}
 		url = url.replace(/\.html$/, '.md');
-		filePath = await getFilePath(url, PAGES_PATH);
-		isMarkdown = true;
-	}
+		const filePath = await this.getFilePath(url);
+		if(filePath === null) {
+			return false;
+		}
+		console.log(`Handling Markdown request for ${filePath}`);
+		const md = fs.readFileSync(filePath).toString();
+		const html = marked(md);
 
-	if(filePath === null) {
-		return false;
-	}
-
-	const indexTmpl = fs.readFileSync(
-		'static/index.html').toString();
-	const page = fs.readFileSync(filePath).toString();
-	const view = render(indexTmpl, {
-		page: isMarkdown ? marked(page) : page,
-	});
-
-	if(view) {
 		res.writeHead(200, {
 			'Content-Type': 'text/html; charset=UTF-8'
 		});
-		res.end(view);
+		res.end(html);
 		return true;
-	} else {
-		return false;
 	}
-};
 
-const handleMarkdownPageRequest = async (req, res) => {
-	let url = req.url;
-	if(!url.match(/\.html$/)) {
-		return false;
-	}
-	url = url.replace(/\.html$/, '.md');
-	const filePath = await getFilePath(url);
-	if(filePath === null) {
-		return false;
-	}
-	console.log(`Handling Markdown request for ${filePath}`);
-	const md = fs.readFileSync(filePath).toString();
-	const html = marked(md);
-
-	res.writeHead(200, {
-		'Content-Type': 'text/html; charset=UTF-8'
-	});
-	res.end(html);
-	return true;
-};
-
-http.createServer(async (req, res) => {
-	const isPageRequest = await handlePageRequest(req, res);
-	if(isPageRequest) {
-		return;
-	}
-	const isMarkdownPageRequest = await handleMarkdownPageRequest(req, res);
-	if(isMarkdownPageRequest) {
-		return;
-	}
-	const file = await prepareFile(req.url);
-	const statusCode = file.found ? 200 : 404;
-	const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
-	res.writeHead(statusCode, { 'Content-Type': mimeType });
-	file.stream.pipe(res);
-	console.log(`${req.method} ${req.url} ${statusCode}`);
-}).listen(PORT);
-
-console.log(`Server running at http://127.0.0.1:${PORT}/`);
+}
