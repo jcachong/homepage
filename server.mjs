@@ -6,16 +6,13 @@ import { marked } from './node_modules/marked/lib/marked.esm.js';
 const PORT = 8000;
 
 const MIME_TYPES = {
-	default: 'application/octet-stream',
 	html: 'text/html; charset=UTF-8',
 	pdf: 'application/pdf',
 	js: 'application/javascript',
 	css: 'text/css',
-	png: 'image/png',
 	jpg: 'image/jpg',
-	gif: 'image/gif',
-	ico: 'image/x-icon',
-	svg: 'image/svg+xml',
+	ttf: 'application/x-font-ttf',
+	otf: 'application/x-font-opentype',
 };
 
 const STATIC_PATH = path.join(process.cwd(), './static');
@@ -40,8 +37,9 @@ export default class Server {
 			}
 			const file = await this.prepareFile(req.url);
 			const statusCode = file.found ? 200 : 404;
-			const mimeType = MIME_TYPES[file.ext] || MIME_TYPES.default;
-			res.writeHead(statusCode, { 'Content-Type': mimeType });
+			res.writeHead(statusCode, {
+				'Content-Type': file.mimeType,
+			});
 			file.stream.pipe(res);
 			console.log(`${req.method} ${req.url} ${statusCode}`);
 		}).listen(PORT);
@@ -68,17 +66,18 @@ export default class Server {
 
 	async prepareFile(url) {
 		let filePath = await this.getFilePath(url);
-		if(filePath === null) {
-			const match = url.match(/([A-Za-z]+).html/);
-			if(match) {
-				marked
-			}
+		let found = filePath !== null;
+		let streamPath = found ? filePath : STATIC_PATH + '/404.html';
+		const extension = path.extname(streamPath).substring(1).toLowerCase();
+		let mimeType = MIME_TYPES[extension];
+		if(!mimeType) {
+			// Only serve known filetypes.
+			streamPath = STATIC_PATH + '/404.html';
+			found = false;
+			mimeType = MIME_TYPES['html'];
 		}
-		const found = filePath !== null;
-		const streamPath = found ? filePath : STATIC_PATH + '/404.html';
-		const ext = path.extname(streamPath).substring(1).toLowerCase();
 		const stream = fs.createReadStream(streamPath);
-		return { found, ext, stream };
+		return { found, mimeType, stream };
 	}
 
 	async handlePageRequest(req, res) {
@@ -107,15 +106,7 @@ export default class Server {
 			page: isMarkdown ? marked(page) : page,
 		});
 
-		if(view) {
-			res.writeHead(200, {
-				'Content-Type': 'text/html; charset=UTF-8'
-			});
-			res.end(view);
-			return true;
-		} else {
-			return false;
-		}
+		return this.writeHTMLResponse(res, view);
 	}
 
 	async handleMarkdownPageRequest(req, res) {
@@ -131,11 +122,14 @@ export default class Server {
 		console.log(`Handling Markdown request for ${filePath}`);
 		const md = fs.readFileSync(filePath).toString();
 		const html = marked(md);
+		return this.writeHTMLResponse(res, html);
+	}
 
+	writeHTMLResponse(res, content) {
 		res.writeHead(200, {
 			'Content-Type': 'text/html; charset=UTF-8'
 		});
-		res.end(html);
+		res.end(content);
 		return true;
 	}
 
