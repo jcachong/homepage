@@ -77,6 +77,12 @@ header hr {
 a span:hover {
 	text-decoration: underline;
 }
+main a:hover {
+	text-decoration: underline;
+}
+footer a:hover {
+	text-decoration: underline;
+}
 #contact-secret {
 	text-align: left;
 }
