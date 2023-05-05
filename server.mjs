@@ -1,6 +1,7 @@
 import * as fs from 'node:fs';
 import * as http from 'node:http';
 import * as path from 'node:path';
+import { marked } from './node_modules/marked/lib/marked.esm.js';
 
 const PORT = 8000;
 
@@ -30,13 +31,25 @@ const render = (template, params) => {
 	return view;
 };
 
-const prepareFile = async (url) => {
+const getFilePath = async (url) => {
 	const paths = [STATIC_PATH, url];
 	if (url.endsWith('/')) paths.push('index.html');
 	const filePath = path.join(...paths);
 	const pathTraversal = !filePath.startsWith(STATIC_PATH);
 	const exists = await fs.promises.access(filePath).then(...toBool);
 	const found = !pathTraversal && exists;
+	return found ? filePath : null;
+};
+
+const prepareFile = async (url) => {
+	let filePath = await getFilePath(url);
+	if(filePath === null) {
+		const match = url.match(/([A-Za-z]+).html/);
+		if(match) {
+			marked
+		}
+	}
+	const found = filePath !== null;
 	const streamPath = found ? filePath : STATIC_PATH + '/404.html';
 	const ext = path.extname(streamPath).substring(1).toLowerCase();
 	const stream = fs.createReadStream(streamPath);
@@ -77,9 +90,34 @@ const handlePageRequest = async (req, res) => {
 	}
 };
 
+const handleMarkdownPageRequest = async (req, res) => {
+	let url = req.url;
+	if(!url.match(/\.html$/)) {
+		return false;
+	}
+	url = url.replace(/\.html$/, '.md');
+	const filePath = await getFilePath(url);
+	if(filePath === null) {
+		return false;
+	}
+	console.log(`Handling Markdown request for ${filePath}`);
+	const md = fs.readFileSync(filePath).toString();
+	const html = marked(md);
+
+	res.writeHead(200, {
+		'Content-Type': 'text/html; charset=UTF-8'
+	});
+	res.end(html);
+	return true;
+};
+
 http.createServer(async (req, res) => {
 	const isPageRequest = await handlePageRequest(req, res);
 	if(isPageRequest) {
+		return;
+	}
+	const isMarkdownPageRequest = await handleMarkdownPageRequest(req, res);
+	if(isMarkdownPageRequest) {
 		return;
 	}
 	const file = await prepareFile(req.url);
