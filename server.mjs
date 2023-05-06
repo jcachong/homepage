@@ -58,9 +58,6 @@ export default class Server {
 
 	async getFilePath(url, prefix = this.staticPath) {
 		const paths = [prefix, url];
-		if (url.endsWith('/')) {
-			paths.push('index.html');
-		}
 		const filePath = path.join(...paths);
 		const pathTraversal = !filePath.startsWith(this.staticPath);
 		const exists = await fs.promises.access(filePath).then(...toBool);
@@ -82,6 +79,21 @@ export default class Server {
 		}
 		const stream = fs.createReadStream(streamPath);
 		return { found, mimeType, stream };
+	}
+
+	async getMarkdownFilePath(url, basePath = this.staticPath) {
+		url = this.convertToMarkdownURL(url);
+		if(url === false) {
+			return null;
+		}
+		return await this.getFilePath(url, basePath);
+	}
+
+	convertToMarkdownURL(url) {
+		if(!url.match(/\.html$/)) {
+			return false;
+		}
+		return url.replace(/\.html$/, '.md');
 	}
 
 	async processFullPageRequest(req, res) {
@@ -111,21 +123,6 @@ export default class Server {
 		});
 
 		return this.sendHTMLResponse(res, view);
-	}
-
-	async getMarkdownFilePath(url, basePath = this.staticPath) {
-		url = this.convertToMarkdownURL(url);
-		if(url === false) {
-			return null;
-		}
-		return await this.getFilePath(url, basePath);
-	}
-
-	convertToMarkdownURL(url) {
-		if(!url.match(/\.html$/)) {
-			return false;
-		}
-		return url.replace(/\.html$/, '.md');
 	}
 
 	async processContentRequest(req, res) {
