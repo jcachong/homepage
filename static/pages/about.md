@@ -3,7 +3,7 @@
 My name is Justin, and I am a software developer.
 
 I was born and raised in Vancouver, leaving for Montreal to study Mathematics and Computer Science at McGill University.
-Though I now work with the practicalities of software engineering, my time at McGill studying pure mathematics gave me a training in the rigorous standards of proof, logical argumentation, and abstract analysis of the subject, which still find good use daily in my problem solving process.
+Though I now work with the practicalities of software engineering, my time at McGill studying pure mathematics and theorical computer science trained me in the rigorous standards of proof, logical argumentation, and abstract analysis of the subject, which still find good use daily in my problem solving process.
 
 Following my graduation from McGill, I returned to Vancouver to work as a software developer.
 After a couple years in a developer role, I transitioned to Team Lead and then Team Manager positions.
