@@ -96,16 +96,16 @@ export default class Server {
 
 		if(filePath === null) {
 			filePath = await this.getMarkdownFilePath(url, this.pagesPath);
-			isMarkdown = filePath !== null;
+			isMarkdown = (filePath !== null);
 		}
 
 		if(filePath === null) {
 			return false;
 		}
 
-		const indexTmpl = fs.readFileSync(
-			'static/index.html').toString();
-		const page = fs.readFileSync(filePath).toString();
+		const indexTmpl = (await fs.promises.readFile(
+			'static/index.html')).toString();
+		const page = (await fs.promises.readFile(filePath)).toString();
 		const view = this.render(indexTmpl, {
 			page: isMarkdown ? marked(page) : page,
 		});
@@ -134,7 +134,7 @@ export default class Server {
 			return false;
 		}
 		console.log(`Handling Markdown request for ${filePath}`);
-		const md = fs.readFileSync(filePath).toString();
+		const md = (await fs.promises.readFile(filePath)).toString();
 		const html = marked(md);
 		return this.sendHTMLResponse(res, html);
 	}
