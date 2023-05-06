@@ -93,9 +93,12 @@ export default class Server {
 		}
 		let filePath = await this.getFilePath(url, this.pagesPath);
 		let isMarkdown = false;
-		if(filePath === null && url.match(/\.html$/)) {
-			url = url.replace(/\.html$/, '.md');
-			filePath = await this.getFilePath(url, this.pagesPath);
+
+		if(filePath === null) {
+			url = this.convertToMarkdownURL(url);
+			if(url !== false) {
+				filePath = await this.getFilePath(url, this.pagesPath);
+			}
 			isMarkdown = true;
 		}
 
@@ -113,11 +116,18 @@ export default class Server {
 		return this.sendHTMLResponse(res, view);
 	}
 
-	async processContentRequest(req, res) {
-		if(!req.url.match(/\.html$/)) {
+	convertToMarkdownURL(url) {
+		if(!url.match(/\.html$/)) {
 			return false;
 		}
-		const url = req.url.replace(/\.html$/, '.md');
+		return url.replace(/\.html$/, '.md');
+	}
+
+	async processContentRequest(req, res) {
+		const url = this.convertToMarkdownURL(req.url);
+		if(url === false) {
+			return false;
+		}
 		const filePath = await this.getFilePath(url);
 		if(filePath === null) {
 			return false;
