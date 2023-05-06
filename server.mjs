@@ -23,6 +23,12 @@ export default class Server {
 	constructor(options) {
 		this.pagesPath = this.buildPath(options.pagesPath);
 		this.staticPath = this.buildPath(options.staticPath);
+
+		this.processFns = [
+			'processFullPageRequest',
+			'processContentRequest',
+			'processStaticRequest',
+		];
 	}
 
 	buildPath(relativePath) {
@@ -31,12 +37,11 @@ export default class Server {
 
 	run() {
 		http.createServer(async (req, res) => {
-			if(await this.processFullPageRequest(req, res)) {
-				return;
-			} else if(await this.processContentRequest(req, res)) {
-				return;
-			} else {
-				await this.processStaticRequest(req, res);
+			for(let i = 0; i < this.processFns.length; i++) {
+				const processFn = this.processFns[i];
+				if(await this[processFn](req, res)) {
+					return;
+				}
 			}
 		}).listen(PORT);
 
@@ -109,11 +114,10 @@ export default class Server {
 	}
 
 	async processContentRequest(req, res) {
-		let url = req.url;
-		if(!url.match(/\.html$/)) {
+		if(!req.url.match(/\.html$/)) {
 			return false;
 		}
-		url = url.replace(/\.html$/, '.md');
+		const url = req.url.replace(/\.html$/, '.md');
 		const filePath = await this.getFilePath(url);
 		if(filePath === null) {
 			return false;
