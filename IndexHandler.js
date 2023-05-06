@@ -1,4 +1,3 @@
-import * as fs from 'node:fs';
 import * as path from 'node:path';
 import { marked } from './node_modules/marked/lib/marked.esm.js';
 import Handler from './Handler.js';
@@ -28,10 +27,8 @@ export default class IndexHandler extends Handler {
 	}
 
 	async process() {
-		const indexTmpl = (await fs.promises.readFile(
-			'static/index.html')).toString();
-		const page = (await fs.promises.readFile(
-			this.filePath)).toString();
+		const indexTmpl = await this.readFile('static/index.html');
+		const page = await this.readFile();
 		const view = this.render(indexTmpl, {
 			page: this.isMarkdown ? marked(page) : page,
 		});

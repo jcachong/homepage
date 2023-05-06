@@ -89,6 +89,11 @@ export default class Handler {
 		return url;
 	}
 
+	async readFile(filePath = this.filePath) {
+		const result = await fs.promises.readFile(filePath);
+		return result.toString();
+	}
+
 	sendHTMLResponse(res, content) {
 		this.sendResponse(res, 200, 'text/html; charset=UTF-8');
 		res.end(content);

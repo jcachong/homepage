@@ -1,4 +1,3 @@
-import * as fs from 'node:fs';
 import { marked } from './node_modules/marked/lib/marked.esm.js';
 import Handler from './Handler.js';
 
@@ -17,7 +16,7 @@ export default class ContentHandler extends Handler {
 
 	async process() {
 		console.log(`Handling Markdown request for ${this.filePath}`);
-		const md = (await fs.promises.readFile(this.filePath)).toString();
+		const md = await this.readFile();
 		const html = marked(md);
 		return this.sendHTMLResponse(this.res, html);
 	}
