@@ -1,5 +1,5 @@
 import * as path from 'node:path';
-import { marked } from './node_modules/marked/lib/marked.esm.js';
+import { marked } from '../node_modules/marked/lib/marked.esm.js';
 import Handler from './Handler.js';
 
 const pagesPath = path.join(process.cwd(), './static/pages');
