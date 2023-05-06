@@ -9,6 +9,7 @@ body {
 }
 main {
 	padding-bottom: 2.5rem;
+	font-size: 16px;
 }
 footer {
 	bottom: 0;
@@ -42,7 +43,7 @@ footer hr {
 	text-align: left;
 	/* 200 ms transition matches value in JavaScript */
 	transition: opacity 200ms;
-	line-height: 1.5rem;
+	line-height: 32px;
 }
 #header {
 	display: grid;
@@ -117,7 +118,7 @@ span {
   opacity: 0;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 900px) {
 	body {
 		margin: 8px 16px;
 	}
