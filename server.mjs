@@ -96,13 +96,18 @@ export default class Server {
 		return url.replace(/\.html$/, '.md');
 	}
 
-	async processFullPageRequest(req, res) {
+	getFullPageURL(req) {
 		let url = req.url;
-		if(url.match(/[a-zA-Z]$/g)) {
-			url += '.html'
-		} else if(url === '/') {
-			url = 'home.html'
+		if(url === '/') {
+			url = 'home.html';
+		} else if(url.match(/[a-zA-Z]$/g)) {
+			url += '.html';
 		}
+		return url;
+	}
+
+	async processFullPageRequest(req, res) {
+		const url = this.getFullPageURL(req);
 		let filePath = await this.getFilePath(url, this.pagesPath);
 		let isMarkdown = false;
 
@@ -117,7 +122,8 @@ export default class Server {
 
 		const indexTmpl = (await fs.promises.readFile(
 			'static/index.html')).toString();
-		const page = (await fs.promises.readFile(filePath)).toString();
+		const page = (await fs.promises.readFile(
+			filePath)).toString();
 		const view = this.render(indexTmpl, {
 			page: isMarkdown ? marked(page) : page,
 		});
