@@ -52,7 +52,6 @@ export default class Server {
 	}
 
 	async getFilePath(url, prefix = this.staticPath) {
-		console.log('prefix', prefix);
 		const paths = [prefix, url];
 		if (url.endsWith('/')) {
 			paths.push('index.html');
@@ -128,19 +127,21 @@ export default class Server {
 	async processStaticRequest(req, res) {
 		const file = await this.prepareFile(req.url);
 		const statusCode = file.found ? 200 : 404;
-		res.writeHead(statusCode, {
-			'Content-Type': file.mimeType,
-		});
+		this.sendResponse(res, statusCode, file.mimeType);
 		file.stream.pipe(res);
 		console.log(`${req.method} ${req.url} ${statusCode}`);
 	}
 
 	sendHTMLResponse(res, content) {
-		res.writeHead(200, {
-			'Content-Type': 'text/html; charset=UTF-8'
-		});
+		this.sendResponse(res, 200, 'text/html; charset=UTF-8');
 		res.end(content);
 		return true;
+	}
+
+	sendResponse(res, statusCode, contentType) {
+		res.writeHead(statusCode, {
+			'Content-Type': contentType,
+		});
 	}
 
 }
