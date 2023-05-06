@@ -15,34 +15,31 @@ const MIME_TYPES = {
 	otf: 'application/x-font-opentype',
 };
 
-const STATIC_PATH = path.join(process.cwd(), './static');
-const PAGES_PATH = path.join(process.cwd(), './static/pages');
-
 const toBool = [() => true, () => false];
+const cwd = process.cwd();
 
 export default class Server {
 
-	construct() {
+	constructor(options) {
+		this.pagesPath = this.buildPath(options.pagesPath);
+		this.staticPath = this.buildPath(options.staticPath);
+	}
+
+	buildPath(relativePath) {
+		return path.join(cwd, relativePath);
 	}
 
 	run() {
 		http.createServer(async (req, res) => {
-			const isPageRequest = await this.handlePageRequest(req, res);
-			if(isPageRequest) {
+			if(await this.processFullPageRequest(req, res)) {
 				return;
-			}
-			const isMarkdownPageRequest = await this.handleMarkdownPageRequest(req, res);
-			if(isMarkdownPageRequest) {
+			} else if(await this.processContentRequest(req, res)) {
 				return;
+			} else {
+				await this.processStaticRequest(req, res);
 			}
-			const file = await this.prepareFile(req.url);
-			const statusCode = file.found ? 200 : 404;
-			res.writeHead(statusCode, {
-				'Content-Type': file.mimeType,
-			});
-			file.stream.pipe(res);
-			console.log(`${req.method} ${req.url} ${statusCode}`);
 		}).listen(PORT);
+
 		console.log(`Server running at http://127.0.0.1:${PORT}/`);
 	}
 
@@ -54,11 +51,14 @@ export default class Server {
 		return view;
 	}
 
-	async getFilePath(url, prefix = STATIC_PATH) {
+	async getFilePath(url, prefix = this.staticPath) {
+		console.log('prefix', prefix);
 		const paths = [prefix, url];
-		if (url.endsWith('/')) paths.push('index.html');
+		if (url.endsWith('/')) {
+			paths.push('index.html');
+		}
 		const filePath = path.join(...paths);
-		const pathTraversal = !filePath.startsWith(STATIC_PATH);
+		const pathTraversal = !filePath.startsWith(this.staticPath);
 		const exists = await fs.promises.access(filePath).then(...toBool);
 		const found = !pathTraversal && exists;
 		return found ? filePath : null;
@@ -67,12 +67,12 @@ export default class Server {
 	async prepareFile(url) {
 		let filePath = await this.getFilePath(url);
 		let found = filePath !== null;
-		let streamPath = found ? filePath : STATIC_PATH + '/404.html';
+		let streamPath = found ? filePath : this.staticPath + '/404.html';
 		const extension = path.extname(streamPath).substring(1).toLowerCase();
 		let mimeType = MIME_TYPES[extension];
 		if(!mimeType) {
 			// Only serve known filetypes.
-			streamPath = STATIC_PATH + '/404.html';
+			streamPath = this.staticPath + '/404.html';
 			found = false;
 			mimeType = MIME_TYPES['html'];
 		}
@@ -80,18 +80,18 @@ export default class Server {
 		return { found, mimeType, stream };
 	}
 
-	async handlePageRequest(req, res) {
+	async processFullPageRequest(req, res) {
 		let url = req.url;
 		if(url.match(/[a-zA-Z]$/g)) {
 			url += '.html'
 		} else if(url === '/') {
 			url = 'home.html'
 		}
-		let filePath = await this.getFilePath(url, PAGES_PATH);
+		let filePath = await this.getFilePath(url, this.pagesPath);
 		let isMarkdown = false;
 		if(filePath === null && url.match(/\.html$/)) {
 			url = url.replace(/\.html$/, '.md');
-			filePath = await this.getFilePath(url, PAGES_PATH);
+			filePath = await this.getFilePath(url, this.pagesPath);
 			isMarkdown = true;
 		}
 
@@ -106,10 +106,10 @@ export default class Server {
 			page: isMarkdown ? marked(page) : page,
 		});
 
-		return this.writeHTMLResponse(res, view);
+		return this.sendHTMLResponse(res, view);
 	}
 
-	async handleMarkdownPageRequest(req, res) {
+	async processContentRequest(req, res) {
 		let url = req.url;
 		if(!url.match(/\.html$/)) {
 			return false;
@@ -122,10 +122,20 @@ export default class Server {
 		console.log(`Handling Markdown request for ${filePath}`);
 		const md = fs.readFileSync(filePath).toString();
 		const html = marked(md);
-		return this.writeHTMLResponse(res, html);
+		return this.sendHTMLResponse(res, html);
 	}
 
-	writeHTMLResponse(res, content) {
+	async processStaticRequest(req, res) {
+		const file = await this.prepareFile(req.url);
+		const statusCode = file.found ? 200 : 404;
+		res.writeHead(statusCode, {
+			'Content-Type': file.mimeType,
+		});
+		file.stream.pipe(res);
+		console.log(`${req.method} ${req.url} ${statusCode}`);
+	}
+
+	sendHTMLResponse(res, content) {
 		res.writeHead(200, {
 			'Content-Type': 'text/html; charset=UTF-8'
 		});
