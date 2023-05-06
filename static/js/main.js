@@ -4,6 +4,8 @@ window.onload = (e) => {
 		'about',
 		'site',
 	];
+	// Magic number 200ms matches #content opacity transition in CSS.
+	const FADE_ANIMATION_MS = 200;
 	document.querySelector("#contact").addEventListener("click", (e) => {
 		// Display contact information.
 		// Try to hide it from bots.
@@ -17,6 +19,12 @@ window.onload = (e) => {
 			spans[2].textContent = 'gmail';
 			spans[1].textContent = 'at';
 			spans[0].textContent = username;
+		} else {
+			setTimeout(() => {
+				spans.forEach((span) => {
+					span.textContent = ''
+				});
+			}, FADE_ANIMATION_MS);
 		}
 		spans.forEach((span) => {
 			span.classList.toggle('fade');
@@ -62,8 +70,7 @@ window.onload = (e) => {
 		const html = await response.text();
 		const endTime = new Date();
 		const timeElapsed = endTime - startTime;
-		// Magic number 200ms matches #content opacity transition in CSS.
-		const waitMs = Math.max(0, 200 - timeElapsed);
+		const waitMs = Math.max(0, FADE_ANIMATION_MS - timeElapsed);
 		setTimeout(() => {
 			// Update page content.
 			contentElem.innerHTML = html;
