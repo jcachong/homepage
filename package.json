@@ -1,0 +1,6 @@
+{
+  "type": "module",
+  "dependencies": {
+    "marked": "^5.0.0"
+  }
+}

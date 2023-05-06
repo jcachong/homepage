@@ -1,7 +1,4 @@
-import Server from './server.mjs';
+import Server from './Server.js';
 
-const server = new Server({
-	pagesPath: './static/pages',
-	staticPath: './static',
-});
+const server = new Server(8000);
 server.run();
