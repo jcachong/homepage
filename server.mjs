@@ -95,11 +95,8 @@ export default class Server {
 		let isMarkdown = false;
 
 		if(filePath === null) {
-			url = this.convertToMarkdownURL(url);
-			if(url !== false) {
-				filePath = await this.getFilePath(url, this.pagesPath);
-			}
-			isMarkdown = true;
+			filePath = await this.getMarkdownFilePath(url, this.pagesPath);
+			isMarkdown = filePath !== null;
 		}
 
 		if(filePath === null) {
@@ -116,6 +113,14 @@ export default class Server {
 		return this.sendHTMLResponse(res, view);
 	}
 
+	async getMarkdownFilePath(url, basePath = this.staticPath) {
+		url = this.convertToMarkdownURL(url);
+		if(url === false) {
+			return null;
+		}
+		return await this.getFilePath(url, basePath);
+	}
+
 	convertToMarkdownURL(url) {
 		if(!url.match(/\.html$/)) {
 			return false;
@@ -124,11 +129,7 @@ export default class Server {
 	}
 
 	async processContentRequest(req, res) {
-		const url = this.convertToMarkdownURL(req.url);
-		if(url === false) {
-			return false;
-		}
-		const filePath = await this.getFilePath(url);
+		const filePath = await this.getMarkdownFilePath(req.url);
 		if(filePath === null) {
 			return false;
 		}
