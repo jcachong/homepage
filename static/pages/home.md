@@ -2,9 +2,7 @@
 
 Hello, and welcome to my website!
 My name is Justin, and I am a software developer building applications in JavaScript, C++, and PHP.
-For more information about me, see my
-<a class="page-link" href="/about"><span>about</span></a>
-page.
+For more information about me, see my [about](/about) page.
 
 For more information about my professional experience and education, see my
 <a href="/assets/cv-justin-achong.pdf" target="_blank">resume</a>.

@@ -2,6 +2,8 @@ window.onload = (e) => {
 	const PAGES = [
 		'home',
 		'about',
+		'blog',
+		'blog/php-foreach-by-reference-considered-harmful',
 		'site',
 	];
 	// Magic number 200ms matches #content opacity transition in CSS.
@@ -42,15 +44,16 @@ window.onload = (e) => {
 		localListeners = [];
 
 		// Add listeners to new link elements.
-		contentElem.querySelectorAll(".page-link").forEach((link) => {
-			addPageLinkListener(link);
-			localListeners.push(link);
+		contentElem.querySelectorAll("a").forEach((link) => {
+			if(addPageLinkListener(link)) {
+				localListeners.push(link);
+			}
 		});
 	};
 
 	const handlePageLinkClick = async function(e) {
 		e.preventDefault();
-		const href = this.href.split('/').pop();
+		const href = this.href.split(`${window.location.origin}/`).pop();
 		const page = href === '' ? 'home' : href;
 		if(!PAGES.includes(page)) {
 			// Unknown page.
@@ -84,13 +87,18 @@ window.onload = (e) => {
 	};
 
 	const addPageLinkListener = (link) => {
-		link.addEventListener("click", handlePageLinkClick);
+		if(link.href.startsWith(window.location.origin)) {
+			link.addEventListener("click", handlePageLinkClick);
+			return true;
+		} else {
+			return false;
+		}
 	};
 
 	// Click a link to go to another page.
 	const addPageLinkListeners = (parentSelector) => {
 		const parentElem = document.querySelector(parentSelector);
-		const pageLinks = parentElem.querySelectorAll(".page-link");
+		const pageLinks = parentElem.querySelectorAll("a");
 		pageLinks.forEach(addPageLinkListener);
 	};
 
