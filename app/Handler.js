@@ -73,10 +73,13 @@ export default class Handler {
 	}
 
 	static convertToMarkdownURL(url) {
-		if(!url.match(/\.html$/)) {
+		if(url.match(/\.html$/)) {
+			return url.replace(/\.html$/, '.md');
+		} else if(url.match(/\/[a-z-]+$/)) {
+			return `${url}.md`;
+		} else {
 			return false;
 		}
-		return url.replace(/\.html$/, '.md');
 	}
 
 	static getFullPageURL(req) {
@@ -101,9 +104,23 @@ export default class Handler {
 	}
 
 	sendResponse(res, statusCode, contentType) {
-		res.writeHead(statusCode, {
+		const headers = {
 			'Content-Type': contentType,
-		});
+		};
+		switch(contentType) {
+			case 'application/javascript':
+			case 'text/css':
+			case 'image/jpg':
+			case 'application/x-font-ttf':
+			case 'application/x-font-opentype':
+				headers['Cache-Control'] = 'public, max-age=31536000';
+				break;
+			default:
+				headers['X-Content-Type-Options'] = 'nosniff';
+				break;
+		}
+
+		res.writeHead(statusCode, headers);
 	}
 
 }

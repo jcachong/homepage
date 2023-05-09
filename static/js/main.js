@@ -69,7 +69,7 @@ window.onload = (e) => {
 		const contentElem = document.querySelector("#content");
 		contentElem.style.opacity = '0';
 		const startTime = new Date();
-		const response = await fetch(`/pages/${page}.html`);
+		const response = await fetch(`/pages/${page}`);
 		const html = await response.text();
 		const endTime = new Date();
 		const timeElapsed = endTime - startTime;
