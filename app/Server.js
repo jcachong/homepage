@@ -16,11 +16,15 @@ export default class Server {
 
 	run() {
 		http.createServer(async (req, res) => {
-			for(let i = 0; i < this.handlers.length; i++) {
-				const handler = await (this.handlers[i]).getInstance(req, res)
-				if(handler !== null) {
-					return await handler.process();
+			try {
+				for(let i = 0; i < this.handlers.length; i++) {
+					const handler = await (this.handlers[i]).getInstance(req, res)
+					if(handler !== null) {
+						return await handler.process();
+					}
 				}
+			} catch(e) {
+				console.log('Caught an error: ', e);
 			}
 		}).listen(this.port);
 
