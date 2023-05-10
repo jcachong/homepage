@@ -101,7 +101,6 @@ window.onload = (e) => {
 		const pageLinks = parentElem.querySelectorAll("a");
 		pageLinks.forEach(addPageLinkListener);
 	};
-
 	addPageLinkListeners("footer");
 	addPageLinkListeners("#nav-bar");
 
@@ -109,7 +108,9 @@ window.onload = (e) => {
 
 	// Toggle between Dark and Light modes.
 	document.querySelector("#toggle-theme").addEventListener("click", (e) => {
-		document.querySelector("body").classList.toggle("dark-mode");
+		const classList = document.querySelector("body").classList;
+		const isDarkMode = classList.contains('dark-mode');
+		setDarkMode(!isDarkMode);
 	});
 
 	window.addEventListener("keydown", (event) => {
@@ -125,5 +126,28 @@ window.onload = (e) => {
 				break;
 		}
 	});
+
+	const setDarkMode = (isDarkMode) => {
+		const classList = document.querySelector("body").classList;
+		if(isDarkMode && !classList.contains('dark-mode')) {
+			classList.add('dark-mode');
+		} else if(!isDarkMode && classList.contains('dark-mode')) {
+			classList.remove('dark-mode');
+		}
+
+		localStorage.setItem('isDarkMode', isDarkMode);
+	};
+
+	const initDarkMode = () => {
+		const item = localStorage.getItem('isDarkMode');
+		const isDarkMode = ['true', 'false'].includes(item)
+			? item === 'true'
+			: null;
+		if(isDarkMode !== null) {
+			setDarkMode(isDarkMode);
+		}
+	};
+
+	initDarkMode();
 };
 
