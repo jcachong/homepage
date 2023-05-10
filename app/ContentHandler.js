@@ -18,7 +18,7 @@ export default class ContentHandler extends Handler {
 		console.log(`Handling Markdown request for ${this.filePath}`);
 		const md = await this.readFile();
 		const html = marked(md);
-		return this.sendHTMLResponse(this.res, html);
+		return this.sendHTMLResponse(html);
 	}
 
 }

@@ -9,7 +9,7 @@ export default class StaticHandler extends Handler {
 	async process() {
 		const file = await Handler.prepareFile(this.req.url);
 		const statusCode = file.found ? 200 : 404;
-		this.sendResponse(this.res, statusCode, file.mimeType);
+		this.sendHeaders(statusCode, file.mimeType);
 		file.stream.pipe(this.res);
 		console.log(`${this.req.method} ${this.req.url} ${statusCode}`);
 	}

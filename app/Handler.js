@@ -97,13 +97,17 @@ export default class Handler {
 		return result.toString();
 	}
 
-	sendHTMLResponse(res, content) {
-		this.sendResponse(res, 200, 'text/html; charset=UTF-8');
-		res.end(content);
+	sendHTMLResponse(content) {
+		this.sendHeaders(200, 'text/html; charset=UTF-8');
+		this.sendBody(content);
 		return true;
 	}
 
-	sendResponse(res, statusCode, contentType) {
+	sendBody(content) {
+		this.res.end(content);
+	}
+
+	sendHeaders(statusCode, contentType) {
 		const headers = {
 			'Content-Type': contentType,
 		};
@@ -120,7 +124,7 @@ export default class Handler {
 				break;
 		}
 
-		res.writeHead(statusCode, headers);
+		this.res.writeHead(statusCode, headers);
 	}
 
 }

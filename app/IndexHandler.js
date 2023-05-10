@@ -20,10 +20,10 @@ export default class IndexHandler extends Handler {
 			return null;
 		}
 
-		const requestHandler = new IndexHandler(req, res);
-		requestHandler.filePath = filePath;
-		requestHandler.isMarkdown = isMarkdown;
-		return requestHandler;
+		const handler = new IndexHandler(req, res);
+		handler.filePath = filePath;
+		handler.isMarkdown = isMarkdown;
+		return handler;
 	}
 
 	async process() {
@@ -33,7 +33,7 @@ export default class IndexHandler extends Handler {
 			page: this.isMarkdown ? marked(page) : page,
 		});
 
-		return this.sendHTMLResponse(this.res, view);
+		return this.sendHTMLResponse(view);
 	}
 
 }
