@@ -51,17 +51,28 @@ window.onload = (e) => {
 		});
 	};
 
-	const handlePageLinkClick = async function(e) {
+	// Supports using back button to navigate.
+	window.addEventListener('popstate', async function(e) {
 		e.preventDefault();
-		const href = this.href.split(`${window.location.origin}/`).pop();
-		const page = href === '' ? 'home' : href;
+		const path = this.window.document.location.href.split(`${window.location.origin}/`).pop();
+		await navigateToPath(path, true);
+	}, true);
+
+	// Navigate to path (e.g., '' for home or 'about' for About).
+	const navigateToPath = async function(path, isGoingBack = false) {
+		const page = path === '' ? 'home' : path;
+		await navigateToPage(page, isGoingBack);
+	}
+
+	// Navigate to path (e.g., 'home' for home or 'about' for About).
+	const navigateToPage = async function(page, isGoingBack = false) {
 		if(!PAGES.includes(page)) {
 			// Unknown page.
 			return;
 		}
 
 		const path = page === 'home' ? '/' : `/${page}`;
-		if(path === window.location.pathname) {
+		if(!isGoingBack && path === window.location.pathname) {
 			// Already on this page.
 			return;
 		}
@@ -79,11 +90,19 @@ window.onload = (e) => {
 			contentElem.innerHTML = html;
 			contentElem.style.opacity = '100';
 
-			// Update URL.
-			window.history.replaceState(null, '', path)
+			if(!isGoingBack) {
+				// Update URL.
+				window.history.pushState(null, '', path)
+			}
 
 			refreshLocalListeners();
 		}, waitMs);
+	};
+
+	const handlePageLinkClick = async function(e) {
+		e.preventDefault();
+		const path = this.href.split(`${window.location.origin}/`).pop();
+		await navigateToPath(path);
 	};
 
 	const addPageLinkListener = (link) => {
