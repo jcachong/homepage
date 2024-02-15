@@ -14,7 +14,7 @@ It does not use any frameworks.
 ### Run the server
 1. `cd homepage`
 1. `npm i`
-1. `node StartServer.js`
+1. `node Serve.js`
 
 ### Access the site
 1. Open `http://localhost:8000` in a browser
