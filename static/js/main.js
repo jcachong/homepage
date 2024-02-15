@@ -106,7 +106,7 @@ window.onload = (e) => {
 	};
 
 	const addPageLinkListener = (link) => {
-		if(link.href.startsWith(window.location.origin)) {
+		if(link.href.startsWith(window.location.origin) && !link.pathname.startsWith('/assets/')) {
 			link.addEventListener("click", handlePageLinkClick);
 			return true;
 		} else {
