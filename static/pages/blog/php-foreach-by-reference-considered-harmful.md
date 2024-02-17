@@ -2,7 +2,11 @@
 
 ### PHP foreach by Reference Considered Harmful
 
-Consider the following snippet of code.
+If you've ever worked with PHP, you've seen `foreach` loops.
+`foreach` is PHP's standard construct for iterating over arrays, and it is ubiquitous in the language.
+But using `foreach` can have some surprising consequences when used with references.
+
+Consider the following apparently ineffectual snippet of code.
 
 ```php
 <?php

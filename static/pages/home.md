@@ -1,7 +1,7 @@
 ## Home
 
 Hello, and welcome to my website!
-My name is Justin, and I am a software developer building applications in JavaScript, C++, and PHP.
+My name is Justin, and I am a software developer building applications using technologies such as TypeScript, C++, and PHP.
 For more information about me, see my [about](/about) page.
 
 For more information about my professional experience and education, see my

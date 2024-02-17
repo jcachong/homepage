@@ -7,7 +7,9 @@ Though I now work with the practicalities of software engineering, my time at Mc
 
 Following my graduation from McGill, I returned to Vancouver to work as a software developer.
 After a couple years in a developer role, I transitioned to Team Lead and then Team Manager positions.
-My favourite languages to work in are JavaScript and C++, though I also have considerable familiarity with PHP.
+Currently, I am working as a Software Engineer at Google in Waterloo.
+
+My favourite languages to work in are TypeScript/JavaScript and C++, though I also have considerable familiarity with PHP.
 For more details about my professional experience, see my
 <a href="/assets/cv-justin-achong.pdf" target="_blank">resume</a>.
 
