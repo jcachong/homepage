@@ -15,10 +15,10 @@ window.onload = (e) => {
 		if(!spans[0].textContent) {
 			const name = document.querySelector("h1").textContent;
 			const names = name.split(' ');
-			const username = (names[0][0] + names[1][1] + names[1]).toLowerCase();
-			spans[4].textContent = 'com';
+			const username = names[0].toLowerCase();
+			spans[4].textContent = 'ca';
 			spans[3].textContent = 'dot';
-			spans[2].textContent = 'gmail';
+			spans[2].textContent = names[1].toLowerCase();
 			spans[1].textContent = 'at';
 			spans[0].textContent = username;
 		} else {
