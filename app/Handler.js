@@ -42,10 +42,25 @@ export default class Handler {
 	static async getFilePath(url, prefix = staticPath) {
 		const paths = [prefix, url];
 		const filePath = path.join(...paths);
-		const pathTraversal = !filePath.startsWith(staticPath);
-		const exists = await fs.promises.access(filePath).then(...toBool);
-		const found = !pathTraversal && exists;
-		return found ? filePath : null;
+
+		// index.html is a template which should not be sent directly to the client.
+		// Don't allow client to load index.html directly.
+		const isIndexHtml = url.endsWith('index.html');
+		if (isIndexHtml) {
+			return null;
+		}
+
+		const hasPathTraversal = !filePath.startsWith(staticPath);
+		if (hasPathTraversal) {
+			return null;
+		}
+
+		const doesFileExist = await fs.promises.access(filePath).then(...toBool);
+		if (!doesFileExist) {
+			return null;
+		}
+
+		return filePath;
 	}
 
 	static async prepareFile(url) {
