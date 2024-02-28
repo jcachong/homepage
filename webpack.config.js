@@ -1,6 +1,7 @@
 import path from 'path';
 import MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import CssMinimizerPlugin from 'css-minimizer-webpack-plugin';
+import HtmlMinimizerPlugin from 'html-minimizer-webpack-plugin';
 import RemovePlugin from 'remove-files-webpack-plugin';
 import { fileURLToPath } from 'url';
 
@@ -58,6 +59,7 @@ export default {
 		minimizer: [
 			'...',
 			new CssMinimizerPlugin(),
+			new HtmlMinimizerPlugin(),
 		],
 	},
 };
