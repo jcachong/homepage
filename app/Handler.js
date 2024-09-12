@@ -11,6 +11,7 @@ const MIME_TYPES = {
 	jpg: 'image/jpg',
 	ttf: 'application/x-font-ttf',
 	otf: 'application/x-font-opentype',
+	xml: 'application/xml',
 };
 
 const toBool = [() => true, () => false];
